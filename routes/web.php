@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\UserController;
+use App\Models\User;
 use App\Traits\Role;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 
+Route::any('/download/excel',[UserController::class, 'exportExcel'])->name('excel.download');
+
+Route::any('/download/pdf',[UserController::class, 'exportPdf'])->name('pdf.download');

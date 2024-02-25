@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
 use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Requests\UserEditRequest;
 use App\Http\Requests\UserRegisterRequest;
@@ -14,10 +15,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Passport\AuthCode;
-use App\PDFGenerate;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
+    public function exportExcel()
+    {
+        return Excel::download(new UserExport,'users.xlsx');
+    }
+    public function exportPdf()
+    {
+        $customPaper = array(0,0,720,1440);
+        $pdf = PDF::loadView('pdf', ['users' => User::all()])->setPaper($customPaper, 'landscape');
+        return $pdf->download('users.pdf');
+    }
     public function my_info()
     {
         return response(['status' => true,'type' => 'json','data' => auth()->guard('api')->user()],200);
@@ -45,6 +56,6 @@ class UserController extends Controller
     public function all_users()
     {
         $users = DB::table('users')->where('role_id', Role::User)->get();
-        return response(['status' => true,'type' => 'json','data' => $users]);
+        return response(['status' => true,'type' => 'json','excel' => route('excel.download'),'pdf' => route('pdf.download'),'data' => $users]);
     }
 }

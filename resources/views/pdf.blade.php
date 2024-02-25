@@ -17,8 +17,6 @@
             <th scope="col">phone</th>
             <th scope="col">region</th>
             <th scope="col">district</th>
-            <th scope="col">password</th>
-            <th scope="col">remember_token</th>
             <th scope="col">created_at</th>
             <th scope="col">updated_at</th>
         </tr>
@@ -47,12 +45,6 @@
                 </td>
                 <td>
                     {{ $item->district }}
-                </td>
-                <td>
-                    {{ $item->password }}
-                </td>
-                <td>
-                    {{ $item->remember_token }}
                 </td>
                 <td>
                     {{ $item->created_at }}
