@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Response;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use Illuminate\Http\Request;
@@ -21,23 +22,11 @@ class ApiAuthController extends Controller
         $user = User::create($request->toArray());
         $response['token'] = $user->createToken($request['email'])->accessToken;
         $response['user'] = $user;
-        return response(['status' => true,'type' => 'json','data' => $response], 200);
+        return Response::ok(true,'json',$response);
     }
     public function login (UserLoginRequest $request) {
 
         $user = User::where('email', $request['email'])->first();
-        if ($user) {
-            if (Hash::check($request['password'], $user->password)) {
-                $token = $user->createToken($request->email)->accessToken;
-                $response = ['token' => $token];
-                return response(['status' => true,'type' => 'json','data' => $response], 200);
-            } else {
-                $response = ["message" => "Password mismatch"];
-                return response(['status' => false,'type' => 'json','data' => $response], 422);
-            }
-        } else {
-            $response = ["message" =>'User does not exist'];
-            return response(['status' => false,'type' => 'json','data' => $response], 422);
-        }
+        return $user ? Response::ok(true,'json',['token' => $user->createToken($request->email)->accessToken]) : Response::notFound();
     }
 }

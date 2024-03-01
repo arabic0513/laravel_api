@@ -31,7 +31,7 @@ class UserController extends Controller
     }
     public function my_info()
     {
-        return response(['status' => true,'type' => 'json','data' => auth()->guard('api')->user()],200);
+        return Response::ok(true,'json',auth()->guard('api')->user());
     }
     public function admin_create(UserRegisterRequest $request)
     {
@@ -41,21 +41,22 @@ class UserController extends Controller
     }
     public function user_edit(UserEditRequest $request)
     {
-        DB::table('users')->where('id',$request->id)->update($request->toArray());
-        return response(['status' => true,'type' => 'json','data' => $request], 200);
+        $user = DB::table('users')->where('id',$request->id)->update($request->toArray());
+        return $user ? Response::ok(true,'json',$request) : Response::notFound();
     }
     public function user_delete(UserEditRequest $request)
     {
-        DB::table('users')->where('id',$request->id)->delete();
-        return response(['status' => true,'type' => 'json','message' => 'User deleted']);
+        $user = DB::table('users')->where('id',$request->id)->delete();
+        return $user ? Response::deleted(true,'json') : Response::notFound();
     }
     public function all_admins()
     {
-        return response(['status' => true,'type' => 'json','data' => User::where('role_id', Role::Admin)->get()]);
+        $users = User::where('role_id', Role::Admin)->get();
+        return $users ? Response::ok(true,'json',$users) : Response::notFound();
     }
     public function all_users()
     {
         $users = DB::table('users')->where('role_id', Role::User)->get();
-        return response(['status' => true,'type' => 'json','excel' => route('excel.download'),'pdf' => route('pdf.download'),'data' => $users]);
+        return $users ? Response::ok(true,'json',$users,true) : Response::notFound();
     }
 }
