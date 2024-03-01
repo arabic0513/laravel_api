@@ -51,7 +51,7 @@ class UserController extends Controller
     }
     public function all_admins()
     {
-        $users = User::where('role_id', Role::Admin)->get();
+        $users = DB::table('users')->where('role_id', Role::Admin)->get();
         return $users ? Response::ok(true,'json',$users) : Response::notFound();
     }
     public function all_users()
