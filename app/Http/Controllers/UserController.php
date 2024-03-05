@@ -42,7 +42,7 @@ class UserController extends Controller
     public function user_edit(UserEditRequest $request)
     {
         $user = DB::table('users')->where('id',$request->id)->update($request->toArray());
-        return $user ? Response::ok(true,'json',$request) : Response::notFound();
+        return $user ? Response::ok(true,'json',$user) : Response::notFound();
     }
     public function user_delete(UserEditRequest $request)
     {
