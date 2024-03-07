@@ -15,6 +15,10 @@ use Illuminate\Support\Str;
 
 class ApiAuthController extends Controller
 {
+    /**
+     * @param UserRegisterRequest $request
+     * @return \Illuminate\Http\Response
+     */
     public function register (UserRegisterRequest $request)
     {
         $request['password']= Hash::make($request['password']);
@@ -24,6 +28,11 @@ class ApiAuthController extends Controller
         $response['user'] = $user;
         return Response::ok(true,'json',$response);
     }
+
+    /**
+     * @param UserLoginRequest $request
+     * @return \Illuminate\Http\Response
+     */
     public function login (UserLoginRequest $request) {
 
         $user = User::where('email', $request['email'])->first();
