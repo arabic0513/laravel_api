@@ -21,7 +21,6 @@ class ApiAuthController extends Controller
      */
     public function register (UserRegisterRequest $request)
     {
-        $request['password']= Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
         $user = User::create($request->toArray());
         $response['token'] = $user->createToken($request['email'])->accessToken;
